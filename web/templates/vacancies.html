@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Вакансии · jobapply{% endblock %}
+
+{% block content %}
+<section class="px-6 lg:px-10 pt-12 max-w-6xl mx-auto">
+  <div class="flex flex-wrap items-end justify-between gap-4 mb-8">
+    <div>
+      <h1 class="font-display text-4xl tracking-tight">Вакансии</h1>
+      <p class="text-zinc-500 text-sm mt-1">hh.ru + Habr Career + корпсайты · только стажёрские и junior · по дате</p>
+    </div>
+    <span class="font-mono text-xs text-zinc-500">
+      {{ total }} найдено · hh {{ hh_count }} · habr {{ habr_count }} · корп {{ corp_count }}
+    </span>
+  </div>
+
+  <form hx-get="/vacancies" hx-target="#list" hx-push-url="true"
+        class="grid sm:grid-cols-[1fr_160px_200px_auto] gap-2 mb-8">
+    <input name="q" value="{{ q }}" placeholder="ML intern, data scientist, Python джуниор…"
+           class="px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:border-accent-500/60 focus:bg-white/10 outline-none transition" />
+    <select name="area"
+            class="px-3 py-3 rounded-xl bg-white/5 border border-white/10 focus:border-accent-500/60 outline-none transition">
+      <option value="113" {% if area == 113 %}selected{% endif %}>Россия</option>
+      <option value="1" {% if area == 1 %}selected{% endif %}>Москва</option>
+      <option value="2" {% if area == 2 %}selected{% endif %}>СПб</option>
+    </select>
+    <select name="level"
+            class="px-3 py-3 rounded-xl bg-white/5 border border-white/10 focus:border-accent-500/60 outline-none transition">
+      <option value="starter" {% if level == 'starter' %}selected{% endif %}>Стажёр + Junior</option>
+      <option value="intern" {% if level == 'intern' %}selected{% endif %}>Только стажёр</option>
+      <option value="junior" {% if level == 'junior' %}selected{% endif %}>Только Junior</option>
+    </select>
+    <button class="px-5 py-3 rounded-xl bg-white text-ink-950 font-semibold hover:bg-zinc-200 transition">Искать</button>
+  </form>
+
+  <div id="list">
+    {% include "_vacancy_list.html" %}
+  </div>
+</section>
+{% endblock %}

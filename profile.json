@@ -1,0 +1,15 @@
+{
+  "name": "Кирилл Силантьев",
+  "email": "kirill_silantev2@mail.ru",
+  "phone": "",
+  "telegram": "@Shall_be",
+  "city": "Москва",
+  "target_position": "ML Engineer стажёр / Junior Data Scientist",
+  "stack": ["Python", "PyTorch", "scikit-learn", "pandas", "SQL", "Git", "FastAPI"],
+  "about": "Студент, изучаю ML и Data Science. Ищу стажировку или junior-позицию для применения навыков на практике.",
+  "experience": "",
+  "education": "",
+  "hh_resume_id": "",
+  "hh_access_token": "",
+  "hh_refresh_token": ""
+}

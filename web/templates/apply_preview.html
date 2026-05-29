@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% block title %}Предпросмотр отклика · jobapply{% endblock %}
+
+{% block content %}
+<section class="px-6 lg:px-10 pt-12 max-w-3xl mx-auto pb-20">
+  <div class="mb-8">
+    <a href="/vacancies" class="text-xs text-zinc-500 hover:text-zinc-300 transition">← Вакансии</a>
+    <h1 class="font-display text-3xl tracking-tight mt-2">Отклик на вакансию</h1>
+  </div>
+
+  <div class="rounded-2xl bg-white/[0.03] border border-white/10 p-5 mb-6">
+    <div class="text-xs font-mono text-zinc-500 uppercase tracking-wider mb-1">Вакансия</div>
+    <div class="font-display text-xl font-medium">{{ vacancy.title }}</div>
+    <div class="text-zinc-400 text-sm mt-1">{{ vacancy.company }}</div>
+    <a href="{{ vacancy.url }}" target="_blank" class="text-xs text-accent-400 hover:text-accent-300 mt-2 block">Открыть на hh.ru →</a>
+  </div>
+
+  <div class="rounded-2xl bg-white/[0.03] border border-white/10 p-5 mb-6">
+    <div class="text-xs font-mono text-zinc-500 uppercase tracking-wider mb-3">Сопроводительное письмо</div>
+    <textarea id="letter" rows="8"
+      class="w-full px-4 py-3 rounded-xl bg-black/30 border border-white/10 focus:border-accent-500/50 outline-none text-sm font-sans resize-none leading-relaxed">{{ letter }}</textarea>
+    <div class="flex gap-3 mt-3">
+      <button onclick="copyLetter()" class="px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-sm hover:bg-white/10 transition">
+        📋 Скопировать
+      </button>
+      <button onclick="regenerate()" class="px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-sm hover:bg-white/10 transition">
+        ✨ Перегенерировать
+      </button>
+    </div>
+  </div>
+
+  <div id="status-msg" class="hidden mb-4 px-4 py-3 rounded-xl text-sm"></div>
+
+  <div class="flex gap-3">
+    <button onclick="sendApply()" class="flex-1 px-6 py-3.5 rounded-xl bg-white text-zinc-900 font-semibold hover:bg-zinc-200 transition text-center">
+      🚀 Откликнуться автоматически
+    </button>
+    <a href="{{ vacancy.url }}" target="_blank"
+       class="px-6 py-3.5 rounded-xl border border-white/20 text-sm font-medium hover:bg-white/5 transition text-center">
+      Открыть вручную
+    </a>
+  </div>
+
+  <div class="mt-4 text-xs text-zinc-600">
+    Автоотклик требует HH_LOGIN + HH_PASSWORD в
+    <a href="/?t=settings&s=advanced" class="underline hover:text-zinc-400">Secrets</a>.
+    Если их нет — нажми «Открыть вручную» и вставь письмо из буфера.
+  </div>
+</section>
+
+<script>
+const VACANCY = {{ vacancy | tojson }};
+
+function copyLetter() {
+  navigator.clipboard.writeText(document.getElementById('letter').value);
+}
+
+async function regenerate() {
+  const url = '/apply?' + new URLSearchParams({
+    url: VACANCY.url, title: VACANCY.title, company: VACANCY.company
+  });
+  window.location.href = url;
+}
+
+async function sendApply() {
+  const btn = event.target;
+  btn.disabled = true;
+  btn.textContent = '⏳ Отправляем...';
+  const msg = document.getElementById('status-msg');
+
+  const resp = await fetch('/apply', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
+    body: JSON.stringify({
+      url: VACANCY.url,
+      title: VACANCY.title,
+      company: VACANCY.company,
+      letter: document.getElementById('letter').value
+    })
+  });
+  const data = await resp.json();
+
+  msg.classList.remove('hidden');
+  if (data.ok) {
+    msg.className = 'mb-4 px-4 py-3 rounded-xl text-sm bg-emerald-500/10 border border-emerald-500/30 text-emerald-400';
+    msg.textContent = '✓ Отклик запущен в фоне. Статус появится в разделе Отклики.';
+  } else {
+    msg.className = 'mb-4 px-4 py-3 rounded-xl text-sm bg-red-500/10 border border-red-500/30 text-red-400';
+    msg.textContent = '✗ ' + (data.error || 'Ошибка');
+    btn.disabled = false;
+    btn.textContent = '🚀 Откликнуться автоматически';
+  }
+}
+</script>
+{% endblock %}

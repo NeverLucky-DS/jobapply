@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="px-6 lg:px-10 pt-16 lg:pt-24 max-w-6xl mx-auto">
+  <div class="flex flex-col items-start gap-6 max-w-3xl">
+    <span class="inline-flex items-center gap-2 text-xs font-mono px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-zinc-300">
+      <span class="w-1.5 h-1.5 rounded-full bg-mint-500 animate-pulse"></span>
+      ML / DS стажировки · {{ stats.total }} источников онлайн
+    </span>
+    <h1 class="font-display text-5xl sm:text-6xl lg:text-7xl leading-[1.05] tracking-tight">
+      Один профиль —
+      <span class="bg-gradient-to-r from-accent-400 via-accent-500 to-mint-400 bg-clip-text text-transparent">
+        десятки откликов
+      </span>
+      каждый день.
+    </h1>
+    <p class="text-lg sm:text-xl text-zinc-400 max-w-2xl leading-relaxed">
+      Парсит hh.ru, Habr Career, Telegram-каналы и карьерные сайты компаний.
+      Mistral пишет сопроводительные под каждую вакансию.
+      Ты решаешь, что отправить.
+    </p>
+    <div class="flex flex-wrap items-center gap-3 mt-2">
+      <a href="/vacancies"
+         class="px-6 py-3 rounded-xl bg-white text-ink-950 font-semibold hover:bg-zinc-200 transition shadow-glow-violet">
+        Открыть вакансии →
+      </a>
+      <a href="#how"
+         class="px-6 py-3 rounded-xl bg-white/5 border border-white/10 text-zinc-200 hover:bg-white/10 transition">
+        Как это работает
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Метрики -->
+<section class="px-6 lg:px-10 mt-20 max-w-6xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-3">
+  {% for label, value, hue in [
+    ('Telegram-каналы', stats.tg_channels, 'violet'),
+    ('Job-борды', stats.job_boards, 'mint'),
+    ('Сайты компаний', stats.company_sites, 'violet'),
+    ('Всего источников', stats.total, 'mint')
+  ] %}
+  <div class="rounded-2xl bg-white/[0.03] border border-white/10 backdrop-blur-sm p-5 hover:bg-white/[0.05] transition">
+    <div class="text-3xl font-display font-semibold {% if hue == 'violet' %}text-accent-400{% else %}text-mint-400{% endif %}">{{ value }}</div>
+    <div class="text-xs uppercase tracking-wider text-zinc-500 mt-1">{{ label }}</div>
+  </div>
+  {% endfor %}
+</section>
+
+<!-- Как это работает -->
+<section id="how" class="px-6 lg:px-10 mt-24 max-w-6xl mx-auto">
+  <h2 class="font-display text-3xl sm:text-4xl tracking-tight mb-10">Как это работает</h2>
+  <div class="grid sm:grid-cols-3 gap-4">
+    {% for step, title, body in [
+      ('01', 'Источники', 'Воркер обходит hh.ru API, Habr Career, Telegram-каналы и карьерные страницы компаний. Дедуп по ссылке и компании+названию.'),
+      ('02', 'Скоринг', 'vacancy-ranker считает релевантность по стеку и опыту. Mistral-эмбеддинги для семантики, TF-IDF для ключевых слов.'),
+      ('03', 'Отклик', 'resume-tailor генерирует сопроводительное под JD. Ты подтверждаешь — система отправляет через hh OAuth.')
+    ] %}
+    <div class="rounded-2xl bg-white/[0.03] border border-white/10 p-6 hover:border-accent-500/40 transition">
+      <div class="font-mono text-xs text-accent-400 mb-3">{{ step }}</div>
+      <div class="font-display text-xl mb-2">{{ title }}</div>
+      <p class="text-sm text-zinc-400 leading-relaxed">{{ body }}</p>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- Источники-превью -->
+<section class="px-6 lg:px-10 mt-24 max-w-6xl mx-auto">
+  <div class="flex items-end justify-between mb-8">
+    <h2 class="font-display text-3xl sm:text-4xl tracking-tight">Подключённые источники</h2>
+    <span class="text-sm text-zinc-500 font-mono">{{ stats.total }} всего</span>
+  </div>
+  <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
+    {% for s in sources %}
+    <a href="{{ s.url }}" target="_blank" rel="noopener"
+       class="group rounded-xl bg-white/[0.03] border border-white/10 p-4 hover:border-accent-500/40 hover:bg-white/[0.05] transition">
+      <div class="flex items-center gap-2 text-xs font-mono text-zinc-500 mb-2">
+        <span class="w-1.5 h-1.5 rounded-full {% if s.kind == 'tg' %}bg-accent-400{% elif s.kind == 'board' %}bg-mint-400{% else %}bg-zinc-400{% endif %}"></span>
+        {{ s.kind }}
+      </div>
+      <div class="font-medium group-hover:text-accent-400 transition">{{ s.name }}</div>
+      {% if s.tag %}<div class="text-xs text-zinc-500 mt-1">{{ s.tag }}</div>{% endif %}
+    </a>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

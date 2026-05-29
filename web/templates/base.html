@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block title %}jobapply — автоотклики на ML-вакансии{% endblock %}</title>
+  <meta name="description" content="Автоматизация откликов на ML/DS-вакансии и стажировки. Один профиль, десятки источников." />
+
+  <!-- Tailwind Play CDN: быстро стартуем, позже мигрируем на CLI -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            display: ['Space Grotesk', 'Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'ui-monospace', 'monospace'],
+          },
+          colors: {
+            ink: { 950: '#08080b', 900: '#0c0c10', 800: '#15151c', 700: '#1f1f29' },
+            accent: { 400: '#a78bfa', 500: '#8b5cf6', 600: '#7c3aed' },
+            mint: { 400: '#5eead4', 500: '#2dd4bf' },
+          },
+          boxShadow: {
+            'glow-violet': '0 0 60px -10px rgba(139,92,246,0.35)',
+            'glow-mint': '0 0 60px -10px rgba(45,212,191,0.30)',
+          },
+        },
+      },
+    }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="/static/css/main.css" />
+
+  <script src="https://unpkg.com/htmx.org@2.0.3"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.1/dist/cdn.min.js"></script>
+</head>
+<body class="bg-ink-950 text-zinc-100 font-sans antialiased min-h-screen overflow-x-hidden">
+
+  <!-- 3D-фон -->
+  <canvas id="bg-canvas" class="fixed inset-0 -z-10 w-full h-full"></canvas>
+  <div class="fixed inset-0 -z-10 bg-gradient-to-b from-ink-950/40 via-ink-950/70 to-ink-950 pointer-events-none"></div>
+
+  <header class="relative z-10 px-6 lg:px-10 py-5 flex items-center justify-between">
+    <a href="/" class="flex items-center gap-3 group">
+      <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-accent-500 to-mint-500 shadow-glow-violet grid place-items-center font-display font-bold text-ink-950">j</div>
+      <span class="font-display text-lg tracking-tight">jobapply</span>
+    </a>
+    <nav class="flex items-center gap-1 text-sm">
+      <a href="/" class="px-3 py-2 rounded-lg text-zinc-400 hover:text-white hover:bg-white/5 transition">главная</a>
+      <a href="/vacancies" class="px-3 py-2 rounded-lg text-zinc-400 hover:text-white hover:bg-white/5 transition">вакансии</a>
+      <a href="/api/docs" class="px-3 py-2 rounded-lg text-zinc-400 hover:text-white hover:bg-white/5 transition">API</a>
+    </nav>
+  </header>
+
+  <main class="relative z-10">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="relative z-10 px-6 lg:px-10 py-10 mt-20 border-t border-white/5 text-xs text-zinc-500 flex flex-wrap items-center justify-between gap-2">
+    <div>jobapply · автоотклики на ML/DS</div>
+    <div class="font-mono">v0.1 · built on Zo</div>
+  </footer>
+
+  <script type="module" src="/static/js/three-bg.js"></script>
+</body>
+</html>

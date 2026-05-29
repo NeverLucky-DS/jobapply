@@ -1,0 +1,43 @@
+{% if items %}
+<div class="grid gap-3">
+  {% for v in items %}
+  <article class="group rounded-2xl bg-white/[0.03] border border-white/10 p-5 hover:border-accent-500/40 hover:bg-white/[0.05] transition">
+    <div class="flex flex-wrap items-start justify-between gap-3">
+      <div class="min-w-0">
+        <div class="flex items-center gap-2 mb-1">
+          <span class="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-md
+            {% if v.source == 'hh.ru' %}bg-accent-500/15 text-accent-400 border border-accent-500/30
+            {% elif v.source == 'habr' %}bg-mint-500/15 text-mint-400 border border-mint-500/30
+            {% elif v.source == 'sber' %}bg-emerald-500/15 text-emerald-300 border border-emerald-500/30
+            {% elif v.source == 'ozon' %}bg-sky-500/15 text-sky-300 border border-sky-500/30
+            {% elif v.source == 'alfa' %}bg-rose-500/15 text-rose-300 border border-rose-500/30
+            {% else %}bg-white/10 text-zinc-300 border border-white/15{% endif %}">
+            {{ v.source }}
+          </span>
+        </div>
+        <a href="{{ v.url }}" target="_blank" rel="noopener"
+           class="font-display text-lg font-medium group-hover:text-accent-400 transition">{{ v.name }}</a>
+        <div class="text-sm text-zinc-400 mt-1">{{ v.employer }} · {{ v.area }}</div>
+      </div>
+      {% if v.salary %}<span class="px-2 py-1 rounded-md bg-white/5 font-mono text-xs">{{ v.salary }}</span>{% endif %}
+    </div>
+    {% if v.snippet %}
+    <p class="text-sm text-zinc-400 mt-3 leading-relaxed">{{ v.snippet|safe }}</p>
+    {% endif %}
+    <div class="flex flex-wrap items-center gap-2 mt-4 text-xs font-mono text-zinc-500">
+      <span class="px-2 py-1 rounded-md bg-white/5">{{ v.experience }}</span>
+      <span class="px-2 py-1 rounded-md bg-white/5">{{ v.schedule }}</span>
+      {% if v.published_at %}<span class="ml-auto text-zinc-600 text-xs">{{ v.published_at }}</span>{% endif %}
+      <a href="/apply?url={{ v.url | urlencode }}&title={{ (v.name or v.title or '') | urlencode }}&company={{ (v.employer or v.company or '') | urlencode }}"
+         class="ml-2 px-3 py-1 rounded-lg bg-accent-500/20 border border-accent-500/40 text-accent-400 text-xs font-medium hover:bg-accent-500/30 transition whitespace-nowrap">
+        ✦ Откликнуться
+      </a>
+    </div>
+  </article>
+  {% endfor %}
+</div>
+{% else %}
+<div class="rounded-2xl border border-dashed border-white/10 p-10 text-center text-zinc-500">
+  Ничего не нашлось. Попробуй другой запрос.
+</div>
+{% endif %}
