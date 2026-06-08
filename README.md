@@ -1,19 +1,15 @@
-# jobapply — автоотклики на ML-вакансии
+# jobapply — LLM-агент для ML/DS вакансий
 
-Backend-платформа для автоматизации поиска и откликов на стажёрские и Junior-позиции в ML/Data Science.
+Автоматизация поиска и откликов на стажировки в **ML / Data Science**: multi-source fetch → фильтр intern/junior → **Mistral** cover letter → Playwright на hh.ru.
 
-## Навыки вакансии → реализация
-
-| Навык вакансии | Реализация в проекте |
-|----------------|---------------------|
-| Python ≥ 1 года | Весь проект на Python 3.12, async/await, типизация через Pydantic |
-| FastAPI | 6 роутов в routes/, lifespan в app.py, HTMX-интеграция |
-| PostgreSQL | SQLModel ORM — легко мигрировать с SQLite |
-| Тесты в Python | pytest, 16 тестов (модульные + интеграционные) |
-| Git | Структурированный репозиторий: routes/services/models |
-| Async Python | asyncio.gather() для параллельного парсинга, httpx.AsyncClient |
-| AI-агенты | Mistral API для генерации cover letter, Playwright-автоматизация |
-| Kafka/RabbitMQ | Background tasks в FastAPI, паттерн event-driven архитектуры |
+| Направление | Реализация |
+|-------------|------------|
+| LLM | Mistral — персонализированное сопроводительное под профиль и вакансию |
+| Agent loop | perceive → filter → generate → act (browser) |
+| Данные | SQLite cache вакансий, лог откликов `Application` |
+| Сервинг | FastAPI, HTMX, BackgroundTasks |
+| Async | `asyncio.gather` (hh + Habr + cache), Playwright async |
+| Тесты | pytest — 16 тестов, mock внешних API |
 
 ## Архитектура
 
@@ -22,6 +18,7 @@ sources (habr/hh/sber) → filter (level) → mistral (letter) → applier (brow
                                        ↓
                                   SQLite log
 ```
+
 
 ## Скриншоты
 
