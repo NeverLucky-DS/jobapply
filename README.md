@@ -2,14 +2,7 @@
 
 Автоматизация поиска и откликов на стажировки в **ML / Data Science**: multi-source fetch → фильтр intern/junior → **Mistral** cover letter → Playwright на hh.ru.
 
-| Направление | Реализация |
-|-------------|------------|
-| LLM | Mistral — персонализированное сопроводительное под профиль и вакансию |
-| Agent loop | perceive → filter → generate → act (browser) |
-| Данные | SQLite cache вакансий, лог откликов `Application` |
-| Сервинг | FastAPI, HTMX, BackgroundTasks |
-| Async | `asyncio.gather` (hh + Habr + cache), Playwright async |
-| Тесты | pytest — 16 тестов, mock внешних API |
+**Стек:** Mistral · Playwright · FastAPI · SQLite · HTMX · pytest (16)
 
 ## Архитектура
 
